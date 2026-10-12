@@ -1,28 +1,52 @@
 package johnarrieta.seminario.imc.rmi.net;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import johnarrieta.seminario.imc.rmi.lib.DatosImc;
 import johnarrieta.seminario.imc.rmi.lib.IRemotaCalculoImc;
 
 /**
- *
+ * Implementacion del calculo de IMC que atiende las peticiones remotas y
+ * registra en consola la actividad de conexion, calculo y desconexion.
+ * 
  * @author JOHN CARLOS ARRIETA ARRIETA
  */
 public class CalculoRmiImcImplem implements IRemotaCalculoImc {
 
-    private DatosImc datos;
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public CalculoRmiImcImplem() {
     }
 
-    /*
-    public DatosImc calcularImc() {
+    private String timestamp() {
+        return LocalDateTime.now().format(dtf);
     }
-    */
+
+    @Override
+    public void conectar(String cliente) {
+        System.out.println("\n--------------------------------------------------------------");
+        System.out.println("[" + timestamp() + "] [SERVIDOR] >>> CLIENTE CONECTADO: " + cliente);
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    @Override
+    public void desconectar(String cliente) {
+        System.out.println("\n--------------------------------------------------------------");
+        System.out.println("[" + timestamp() + "] [SERVIDOR] <<< CLIENTE DESCONECTADO: " + cliente);
+        System.out.println("--------------------------------------------------------------");
+    }
+
     @Override
     public DatosImc calcularImc(DatosImc datos) {
+        System.out.println("\n==============================================================");
+        System.out.println("[" + timestamp() + "] [SERVIDOR] PETICION DE CALCULO DE IMC RECIBIDA");
+        System.out.println("  -> Datos de entrada : Peso = " + datos.getPeso() + " kg | Altura = " + datos.getAltura() + " m");
+
         float resultado = 0;
         if (datos.getPeso() <= 0 || datos.getAltura() <= 0) {
             datos.setInterpretacion("ERROR: El peso y la altura deben ser mayores que 0");
+            System.out.println("  -> [ERROR] El peso y la altura deben ser mayores que 0");
+            System.out.println("==============================================================");
             return datos;
         } else {
             resultado = datos.getPeso() / (datos.getAltura() * datos.getAltura());
@@ -36,6 +60,9 @@ public class CalculoRmiImcImplem implements IRemotaCalculoImc {
             } else {
                 datos.setInterpretacion("Debes consultar un Medico, tu peso es muy alto");
             }
+            System.out.println("  -> IMC Calculado    : " + resultado);
+            System.out.println("  -> Diagnostico      : " + datos.getInterpretacion());
+            System.out.println("==============================================================");
             return datos;
         }
     }

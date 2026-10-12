@@ -26,6 +26,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
      */
     public VentanaPrincipal() {
         initComponents();
+        // Listener para notificar desconexion limpia si el usuario cierra la ventana
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                desconectarDelServidor();
+            }
+        });
+    }
+
+    private void desconectarDelServidor() {
+        if (cliente != null && calculoImcRemoto != null && btnIniciar.getText().equalsIgnoreCase("Desconectar")) {
+            try {
+                calculoImcRemoto.desconectar("Cliente IMC (" + ipServidor + ":" + puerto + ")");
+            } catch (Exception e) {
+            }
+            try {
+                cliente.close();
+            } catch (Exception e) {
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -231,48 +251,76 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 invocadorRemoto = new CallHandler();
                 cliente = new Client(ipServidor, puerto, invocadorRemoto);
                 calculoImcRemoto = (IRemotaCalculoImc) cliente.getGlobal(IRemotaCalculoImc.class);
+
+                // Notificar al servidor de la nueva conexion
+                try {
+                    calculoImcRemoto.conectar("Cliente IMC (" + ipServidor + ":" + puerto + ")");
+                } catch (Exception e) {
+                    System.out.println("No se pudo notificar conexion: " + e.getMessage());
+                }
+
                 btnIniciar.setText("Desconectar");
                 btnIniciar.setForeground(Color.RED);
                 txtEstado.setText("Conectado");
                 txtEstado.setForeground(Color.GREEN);
             } else if (btnIniciar.getText().equalsIgnoreCase("Desconectar")) {
-                cliente.close();
+                // Notificar al servidor de la desconexion antes de cerrar el socket
+                if (calculoImcRemoto != null) {
+                    try {
+                        calculoImcRemoto.desconectar("Cliente IMC (" + ipServidor + ":" + puerto + ")");
+                    } catch (Exception e) {
+                        System.out.println("No se pudo notificar desconexion: " + e.getMessage());
+                    }
+                }
+                if (cliente != null) {
+                    cliente.close();
+                }
                 btnIniciar.setText("Conectar");
                 txtEstado.setText("Desconectado");
                 btnIniciar.setForeground(Color.GREEN);
                 txtEstado.setForeground(Color.RED);
             }
         } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "No fue posible conectar con el servidor en " + ipServidor + ":" + puerto, "Error de Conexion", JOptionPane.ERROR_MESSAGE);
             System.out.println("ERROR AL CONECTAR");
             ex.printStackTrace();
         }
     }                                          
 
     private void btnIniciar1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        float peso = Float.parseFloat(campoPeso.getText());
-        float altura = Float.parseFloat(campoAltura.getText());
-        Thread hilo = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    System.out.println("Peso: " + peso);
-                    System.out.println("Altura: " + altura);
-                    DatosImc datos = new DatosImc();
-                    datos.setAltura(altura);
-                    datos.setPeso(peso);
-                    System.out.println("Enviados los datos\nEsperando respuesta");
-                    datos = calculoImcRemoto.calcularImc(datos);
-                    System.out.println("IMC: " + datos.getResultado() + "\nMensaje: " + datos.getInterpretacion());
-                    txtResultado.setText(datos.getResultado() + "");
-                    txtMensaje.setText(datos.getInterpretacion());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(VentanaPrincipal.this, "ERROR con el cliente " + ex.getMessage());
-                    System.out.println("ERROR con el cliente " + ex.getMessage());
-                    ex.printStackTrace();
+        if (calculoImcRemoto == null || !btnIniciar.getText().equalsIgnoreCase("Desconectar")) {
+            JOptionPane.showMessageDialog(this, "Debe conectarse al servidor en la pestaña CONEXION antes de calcular.", "Sin Conexion", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            float peso = Float.parseFloat(campoPeso.getText());
+            float altura = Float.parseFloat(campoAltura.getText());
+            Thread hilo = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("Peso: " + peso);
+                        System.out.println("Altura: " + altura);
+                        DatosImc datos = new DatosImc();
+                        datos.setAltura(altura);
+                        datos.setPeso(peso);
+                        System.out.println("Enviados los datos\nEsperando respuesta");
+                        datos = calculoImcRemoto.calcularImc(datos);
+                        System.out.println("IMC: " + datos.getResultado() + "\nMensaje: " + datos.getInterpretacion());
+                        txtResultado.setText(datos.getResultado() + "");
+                        txtMensaje.setText(datos.getInterpretacion());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(VentanaPrincipal.this, "ERROR con el cliente " + ex.getMessage());
+                        System.out.println("ERROR con el cliente " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
                 }
-            }
-        };
-        hilo.start();
+            };
+            hilo.start();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese valores numericos validos para peso y altura.", "Datos Invalidos", JOptionPane.ERROR_MESSAGE);
+        }
     }                                           
 
     public JLabel getTxtEstado() {
