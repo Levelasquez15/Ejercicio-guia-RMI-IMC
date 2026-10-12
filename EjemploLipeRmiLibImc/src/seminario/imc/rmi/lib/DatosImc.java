@@ -1,10 +1,12 @@
-package johnarrieta.seminario.imc.rmi.lib;
+package seminario.imc.rmi.lib;
 
 import java.io.Serializable;
 
 /**
- *
- * @author JOHN CARLOS ARRIETA ARRIETA
+ * Objeto de transferencia de datos (DTO) para la informacion y resultado del IMC.
+ * Implementa Serializable para permitir su transporte sobre RMI.
+ * 
+ * @author Lewis Velasquez
  */
 public class DatosImc implements Serializable {
 

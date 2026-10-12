@@ -1,10 +1,11 @@
-package johnarrieta.seminario.imc.rmi;
+package seminario.imc.rmi;
 
-import johnarrieta.seminario.imc.rmi.vistas.VentanaPrincipal;
+import seminario.imc.rmi.vistas.VentanaPrincipal;
 
 /**
- *
- * @author jarri
+ * Clase principal para lanzar la interfaz grafica del cliente IMC.
+ * 
+ * @author Lewis Velasquez
  */
 public class Principal {
 

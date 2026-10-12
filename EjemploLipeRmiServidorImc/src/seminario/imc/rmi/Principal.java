@@ -1,10 +1,11 @@
-package johnarrieta.seminario.imc.rmi;
+package seminario.imc.rmi;
 
-import johnarrieta.seminario.imc.rmi.net.Servidor;
+import seminario.imc.rmi.net.Servidor;
 
 /**
- *
- * @author JOHN CARLOS ARRIETA ARRIETA
+ * Clase principal para iniciar el servidor RMI.
+ * 
+ * @author Lewis Velasquez
  */
 public class Principal {
 

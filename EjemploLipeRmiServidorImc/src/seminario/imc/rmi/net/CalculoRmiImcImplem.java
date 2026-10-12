@@ -1,15 +1,15 @@
-package johnarrieta.seminario.imc.rmi.net;
+package seminario.imc.rmi.net;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import johnarrieta.seminario.imc.rmi.lib.DatosImc;
-import johnarrieta.seminario.imc.rmi.lib.IRemotaCalculoImc;
+import seminario.imc.rmi.lib.DatosImc;
+import seminario.imc.rmi.lib.IRemotaCalculoImc;
 
 /**
- * Implementacion del calculo de IMC que atiende las peticiones remotas y
- * registra en consola la actividad de conexion, calculo y desconexion.
+ * Implementacion del calculo del IMC del lado del servidor.
+ * Atiende invocaciones remotas RMI y registra eventos en consola.
  * 
- * @author JOHN CARLOS ARRIETA ARRIETA
+ * @author Lewis Velasquez
  */
 public class CalculoRmiImcImplem implements IRemotaCalculoImc {
 

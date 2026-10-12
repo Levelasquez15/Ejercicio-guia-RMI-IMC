@@ -1,9 +1,9 @@
-package johnarrieta.seminario.imc.rmi.lib;
+package seminario.imc.rmi.lib;
 
 /**
- * Interfaz remota para el servicio de calculo de IMC.
+ * Interfaz remota que define el contrato del servicio distribuido para el calculo del IMC.
  * 
- * @author JOHN CARLOS ARRIETA ARRIETA
+ * @author Lewis Velasquez
  */
 public interface IRemotaCalculoImc {
 

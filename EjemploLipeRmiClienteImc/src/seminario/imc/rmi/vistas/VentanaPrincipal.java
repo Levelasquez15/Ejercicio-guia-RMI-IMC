@@ -1,17 +1,18 @@
-package johnarrieta.seminario.imc.rmi.vistas;
+package seminario.imc.rmi.vistas;
 
 import java.awt.Color;
 import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import johnarrieta.seminario.imc.rmi.lib.*;
+import seminario.imc.rmi.lib.*;
 import net.sf.lipermi.handler.CallHandler;
 import net.sf.lipermi.net.Client;
 
 /**
- *
- * @author JOHN CARLOS ARRIETA ARRIETA
+ * Formulario Swing para el cliente de calculo de IMC via RMI.
+ * 
+ * @author Lewis Velasquez
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 

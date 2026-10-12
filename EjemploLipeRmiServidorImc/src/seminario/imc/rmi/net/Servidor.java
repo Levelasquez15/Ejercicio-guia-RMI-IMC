@@ -1,14 +1,15 @@
-package johnarrieta.seminario.imc.rmi.net;
+package seminario.imc.rmi.net;
 
 import java.io.IOException;
-import johnarrieta.seminario.imc.rmi.lib.IRemotaCalculoImc;
+import seminario.imc.rmi.lib.IRemotaCalculoImc;
 import net.sf.lipermi.exception.LipeRMIException;
 import net.sf.lipermi.handler.CallHandler;
 import net.sf.lipermi.net.Server;
 
 /**
- *
- * @author JOHN CARLOS ARRIETA ARRIETA
+ * Servidor que expone el servicio RMI usando LipeRMI en el puerto 9007.
+ * 
+ * @author Lewis Velasquez
  */
 public class Servidor {
 
